@@ -1,0 +1,184 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var chalk = require('chalk');
+var fs = require('fs');
+var nconf = require('nconf');
+
+nconf.argv()
+  .env()
+  .file({ file: 'config.json' });
+
+var mode;
+var inputFile;
+var outputFile;
+var circleOfFifths = nconf.get('circleOfFifths');
+var accidental = nconf.get('accidental');
+var pitches = nconf.get('pitches');
+
+program
+  .version('0.0.1')
+  .arguments('<input> [output]')
+  .action(function onAction(input, output) {
+    inputFile = input;
+    outputFile = output;
+  });
+
+program.on('--help', function() {
+  console.log('  Examples:');
+  console.log('');
+  console.log('    $ musicjson2abc input.json output.abc');
+  console.log('    $ musicjson2abc example.json example.abc');
+  console.log('');
+  console.log('  Hint:');
+  console.log('');
+  console.log('    The input file should be a valid musicJSON file');
+  console.log('    The output file will become a valid abc file.')
+  console.log('    This may overwrite existing files.');
+  console.log('');
+});
+
+program.parse(process.argv);
+
+if (typeof inputFile === 'undefined') {
+  console.error(chalk.bold.red('ERROR: No input file specified.'));
+  console.info(chalk.cyan('Run musicjson2abc -h for further information.'));
+  process.exit(1);
+}
+if (typeof outputFile === 'undefined') {
+  outputFile = inputFile.replace(/\.[^/.]+$/, "")
+    + ".abc";
+  console.info(chalk.cyan('INFO: No output file specified.'));
+  console.info(chalk.cyan('Defaults to', outputFile));
+}
+
+readInput(inputFile);
+
+/**
+ * Reads the JSON eoncoded data from the specified input file
+ * @param {string} file - The path to the specified input file
+ */
+function readInput(file) {
+  fs.readFile(file, 'utf8', function(err, data) {
+    if (err) {
+      console.error(chalk.bold.red('ERROR:', err));
+      process.exit(1);
+    }
+    convert(JSON.parse(data));
+  });
+}
+
+/**
+ * Writes the abc notated string to the specified output file
+ * @param {string} file - The path to the specified output file
+ * @param {string} data - The data that should be written to the file
+ */
+function writeOutput(file, data) {
+  fs.writeFile(file, data, function(err) {
+    if(err) {
+      console.error(chalk.bold.red('ERROR:', err));
+      process.exit(1);
+    }
+
+    console.info(chalk.cyan('Output written to', outputFile));
+  });
+}
+
+/**
+ * Converts input from JSON to abc notation and saves to output file
+ * @param {input} input - The parsed input from input file
+ */
+function convert(input) {
+  console.log(input);
+
+  var output = getAbcString(input);
+  console.log(output);
+
+  writeOutput(outputFile, output);
+}
+
+/**
+ * Returns the abc notation string from given input
+ * @param {object} input - The parsed input from input file
+ * @retruns {string}
+ */
+function getAbcString(input) {
+  var outputData = "";
+  outputData += "X:"
+    + input.id
+    + "\n";
+  outputData += "T:"
+    + input.id
+    + "\n";
+  outputData += "M:"
+    + input.attributes.time.beats
+    + "/"
+    + input.attributes.time["beat-type"]
+    + "\n";
+  outputData += "L:"
+    + "1/"
+    + (input.attributes.divisions * input.attributes.time["beat-type"])
+    + "\n";
+  outputData += "K:"
+    + getAbcKey(input.attributes.key.fifths, input.attributes.key.mode)
+    + "\n";
+
+  for (var i = 0; i < input.measures.length; i++) {
+    var measure = input.measures[i];
+    if (measure.attributes.repeat.left) {
+      outputData += "\n"
+        + "|:";
+    } else {
+      //outputData += "|";
+    }
+
+    for (var j = 0; j < measure.notes.length; j++) {
+
+      outputData += " "
+        + getAbcNote(measure.notes[j]);
+    }
+
+    if (measure.attributes.repeat.right) {
+      outputData += ":|"
+        + "\n";
+    } else {
+      outputData += "|";
+    }
+
+  }
+
+  return outputData;
+}
+
+/**
+ * Returns the key for abc notation from given fifths
+ * @param {number} fifths - The position inside the circle of fifths
+ * @param {string|undefined} mode - The mode (major / minor)
+ * @retruns {string}
+ */
+function getAbcKey(fifths, mode) {
+  if (typeof mode === 'undefined') mode = 'major';
+  return circleOfFifths[mode][fifths];
+}
+
+/**
+ * Returns a note in abc notation from given note object (JSON)
+ * @param {object} note - The note that should be transformed to abc
+ * @returns {string}
+ */
+function getAbcNote(note) {
+  // check if rest
+  if (note.rest) {
+    // return rest as abc
+    return "z" + note.duration;
+  } else {
+    // return note as abc
+    return accidental[note.pitch.accidental]
+      + pitches[note.pitch.octave][note.pitch.step]
+      + note.duration;
+  }
+}
+
+// Run with: musicjson2abc example.json
+
+// Run jsdoc with: jsdoc index.js -d doc -R README.md
