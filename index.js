@@ -61,7 +61,7 @@ var program = require('commander'),
 			"E": "E,,,",
 			"F": "F,,,",
 			"G": "G,,,"
-		}
+		},
 		"2": {
 			"A": "A,,",
 			"B": "B,,",
