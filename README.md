@@ -2,6 +2,12 @@
 A command-line tool to convert musicJSON to abc notation
 An example of the used format of json is in [example.json](https://github.com/freakimkaefig/musicjson2abc/blob/master/example.json).
 
+## Getting started
+Install the module with:
+```sh
+npm install -g musicjson2abc
+```
+
 ## Example
 ```javascript
 var musicjson2abc = require('musicjson2abc');
@@ -17,12 +23,6 @@ console.log(abc);
 //   L:1/16
 //   K:F
 //    _C4|
-```
-
-## Getting started
-Install the module with:
-```sh
-npm install -g musicjson2abc
 ```
 
 ## Command line tool
