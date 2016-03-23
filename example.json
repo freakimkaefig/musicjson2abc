@@ -31,7 +31,8 @@
                "pitch": {
                   "step":"C",
                   "octave":4,
-                  "alter":0
+                  "alter":0,
+                  "accidental": "flat"
                },
                "$$hashKey":"object:1255"
             }
