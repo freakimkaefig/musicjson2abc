@@ -27,7 +27,7 @@ var pitches = {
 /**
  * Returns the abc notation string from given input
  * @param {object} input - The parsed input from input file
- * @retruns {string}
+ * @returns {string}
  */
 function getAbcString(input) {
   var outputData = "";
@@ -81,7 +81,7 @@ function getAbcString(input) {
  * Returns the key for abc notation from given fifths
  * @param {number} fifths - The position inside the circle of fifths
  * @param {string|undefined} mode - The mode (major / minor)
- * @retruns {string}
+ * @returns {string}
  */
 function getAbcKey(fifths, mode) {
   if (typeof mode === 'undefined') mode = 'major';
@@ -114,8 +114,6 @@ function getAbcNote(note) {
  */
 exports.convert2Abc = function(data) {
   return getAbcString(JSON.parse(data));
-}
-
-// Run with: musicjson2abc example.json
+};
 
 // Run jsdoc with: jsdoc index.js -d doc -R README.md

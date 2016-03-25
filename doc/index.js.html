@@ -26,109 +26,36 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>#!/usr/bin/env node
-
-var program = require('commander');
-var chalk = require('chalk');
+            <pre class="prettyprint source linenums"><code>var chalk = require('chalk');
 var fs = require('fs');
-var nconf = require('nconf');
 
-nconf.argv()
-  .env()
-  .file({ file: 'config.json' });
-
-var mode;
-var inputFile;
-var outputFile;
-var circleOfFifths = nconf.get('circleOfFifths');
-var accidental = nconf.get('accidental');
-var pitches = nconf.get('pitches');
-
-program
-  .version('0.0.1')
-  .arguments('&lt;input> [output]')
-  .action(function onAction(input, output) {
-    inputFile = input;
-    outputFile = output;
-  });
-
-program.on('--help', function() {
-  console.log('  Examples:');
-  console.log('');
-  console.log('    $ musicjson2abc input.json output.abc');
-  console.log('    $ musicjson2abc example.json example.abc');
-  console.log('');
-  console.log('  Hint:');
-  console.log('');
-  console.log('    The input file should be a valid musicJSON file');
-  console.log('    The output file will become a valid abc file.')
-  console.log('    This may overwrite existing files.');
-  console.log('');
-});
-
-program.parse(process.argv);
-
-if (typeof inputFile === 'undefined') {
-  console.error(chalk.bold.red('ERROR: No input file specified.'));
-  console.info(chalk.cyan('Run musicjson2abc -h for further information.'));
-  process.exit(1);
-}
-if (typeof outputFile === 'undefined') {
-  outputFile = inputFile.replace(/\.[^/.]+$/, "")
-    + ".abc";
-  console.info(chalk.cyan('INFO: No output file specified.'));
-  console.info(chalk.cyan('Defaults to', outputFile));
-}
-
-readInput(inputFile);
-
-/**
- * Reads the JSON eoncoded data from the specified input file
- * @param {string} file - The path to the specified input file
- */
-function readInput(file) {
-  fs.readFile(file, 'utf8', function(err, data) {
-    if (err) {
-      console.error(chalk.bold.red('ERROR:', err));
-      process.exit(1);
-    }
-    convert(JSON.parse(data));
-  });
-}
-
-/**
- * Writes the abc notated string to the specified output file
- * @param {string} file - The path to the specified output file
- * @param {string} data - The data that should be written to the file
- */
-function writeOutput(file, data) {
-  fs.writeFile(file, data, function(err) {
-    if(err) {
-      console.error(chalk.bold.red('ERROR:', err));
-      process.exit(1);
-    }
-
-    console.info(chalk.cyan('Output written to', outputFile));
-  });
-}
-
-/**
- * Converts input from JSON to abc notation and saves to output file
- * @param {input} input - The parsed input from input file
- */
-function convert(input) {
-  console.log(input);
-
-  var output = getAbcString(input);
-  console.log(output);
-
-  writeOutput(outputFile, output);
-}
+var circleOfFifths = {
+  "major": { "-7": "B", "-6": "F#", "-5": "Db", "-4": "Ab", "-3": "Eb", "-2": "Bb", "-1": "F", "0" : "C", "1" : "G", "2" : "D", "3" : "A", "4" : "E", "5" : "B", "6" : "F#", "7" : "Db" },
+  "minor": { "-7": "G#", "-6": "D#", "-5": "Bb", "-4": "F", "-3": "C", "-2": "G", "-1": "D", "0" : "A", "1" : "E", "2" : "B", "3" : "F#", "4" : "C#", "5" : "G#", "6" : "D#", "7" : "Bb" }
+};
+var accidental = {
+  "flat-flat": "__",
+  "flat": "_",
+  "natural": "=",
+  "sharp" : "^",
+  "sharp-sharp" : "^^",
+  "undefined" : ""
+};
+var pitches = {
+  "1": { "A": "A,,,", "B": "B,,,", "C": "C,,,", "D": "D,,,", "E": "E,,,", "F": "F,,,", "G": "G,,," },
+  "2": { "A": "A,,", "B": "B,,", "C": "C,,", "D": "D,,", "E": "E,,", "F": "F,,", "G": "G,," },
+  "3": { "A": "A,", "B": "B,", "C": "C,", "D": "D,", "E": "E,", "F": "F,", "G": "G," },
+  "4": { "A": "A", "B": "B", "C": "C", "D": "D", "E": "E", "F": "F", "G": "G" },
+  "5": { "A": "a", "B": "b", "C": "c", "D": "d", "E": "e", "F": "f", "G": "g" },
+  "6": { "A": "a'", "B": "b'", "C": "c'", "D": "d'", "E": "e'", "F": "f'", "G": "g'" },
+  "7": { "A": "a''", "B": "b''", "C": "c''", "D": "d''", "E": "e''", "F": "f''", "G": "g''" },
+  "8": { "A": "a'''", "B": "b'''", "C": "c'''", "D": "d'''", "E": "e'''", "F": "f'''", "G": "g'''" }
+};
 
 /**
  * Returns the abc notation string from given input
  * @param {object} input - The parsed input from input file
- * @retruns {string}
+ * @returns {string}
  */
 function getAbcString(input) {
   var outputData = "";
@@ -182,7 +109,7 @@ function getAbcString(input) {
  * Returns the key for abc notation from given fifths
  * @param {number} fifths - The position inside the circle of fifths
  * @param {string|undefined} mode - The mode (major / minor)
- * @retruns {string}
+ * @returns {string}
  */
 function getAbcKey(fifths, mode) {
   if (typeof mode === 'undefined') mode = 'major';
@@ -214,10 +141,8 @@ function getAbcNote(note) {
  * @returns {string}
  */
 exports.convert2Abc = function(data) {
-  return getAbcString(data);
-}
-
-// Run with: musicjson2abc example.json
+  return getAbcString(JSON.parse(data));
+};
 
 // Run jsdoc with: jsdoc index.js -d doc -R README.md
 </code></pre>
@@ -230,13 +155,13 @@ exports.convert2Abc = function(data) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#convert">convert</a></li><li><a href="global.html#convert2Abc">convert2Abc</a></li><li><a href="global.html#getAbcKey">getAbcKey</a></li><li><a href="global.html#getAbcNote">getAbcNote</a></li><li><a href="global.html#getAbcString">getAbcString</a></li><li><a href="global.html#readInput">readInput</a></li><li><a href="global.html#writeOutput">writeOutput</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#convert2Abc">convert2Abc</a></li><li><a href="global.html#getAbcKey">getAbcKey</a></li><li><a href="global.html#getAbcNote">getAbcNote</a></li><li><a href="global.html#getAbcString">getAbcString</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Mar 23 2016 19:11:43 GMT+0100 (Mitteleuropäische Zeit)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Mar 25 2016 17:48:04 GMT+0100 (Mitteleuropäische Zeit)
 </footer>
 
 <script> prettyPrint(); </script>
