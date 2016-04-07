@@ -9,14 +9,13 @@ node_js:
 - '5.4'
 - '5.3'
 - '5.2'
-- '5.1.0'
-
+- 5.1.0
 deploy:
   provider: npm
   email: freak.im.kaefig@gmx.net
   api_key:
-    secure: eG3bcRf6RY2y/9G7e+tb2EY1LK2M8dytn+qumJyIX7sEX6PKIL01Is0i5DG2/MHLOGLg/PMMn8AIptwI+IxOH6Lr5XH/BMgxHxfH4fJNroDKY/x3sbvJX9dhWqVI2LUwcT2l29MdDfI36hBlVOnU2miiO0KK58+hoUeTxr2fFt9ASoj7mq6NZz2BgM+slwVv67s6s6L5u5++VChTbwH5CscobF4WAJJ5IqC33O44KGLqmukiB6c8vfZbGjv8NGv1aToTJqft0UbRqu8SAmY2CK82NRCnBUkyxD/sdonMoHbVGEVJO9om2QzOjPjTi8Q+Ue9wfCMeFLwD3cK92RRkKJ7gMsAdYDm4hZNzsdgYevnuItL+elqekk3aU27K3RfRB08WO+Uou1yVAAkiHhPwz9ZbZwsIhj6mSNOL/27Wl/fqtdb+pOH1XB4Eb5uPiDanzz/k37nPVloK41ph8c6YPgmzUGWAlamdmJXPhe3rQX7lTTdb3xCYlKsaSa6dKi/JYaEeGU6ptYI12Urn9127XhGfjlV0k1vKKlfQrFi5MRhSEEfWgV0fiTHQsvvuflFCPo46cZ4lxMy0RQvEk3cXmlHRV7IQIOPpWtCa2kPTrJnxDO39Ruz169tFxiFZipsOUcNw2hbcZr65PrHt/0uHbKN8KnspFXvGslu79+JF/aI=
+    secure: hxkY0CmPl3Lf5GOXgSyb2QWblC73JiV77nnA3auyg4816EhLb9LblIgOB4u1sYKUmowR8UJ3LL70Z0pMsyyHX5KEY6haD5zhXznu95kKhuHmEx/fD6Tb/byC+xtDYwjqSpDJAIEK8wupHXCvwQGzDJEEJ4b33T0c2Tv0CZn5+kr893+gqnRkUVnZ2qv59bnuoSvWehW9fbPSeiSBfzffPGvlpouwFfFKms5o4ufk+jdDgHOtuNDHjJ6M6AqOBSoUMmnQXdzJMc3MlNmPlhmwkXD4mDKtd75glGm/TPo1xAGts2WaNVOek1Umxn4y1saJ2fe5XQ12V+9LCIr+1sJoT5ScswZ90e4SJkWak3zGrACI7eHfWmHM7sUJmXya35faSbGL9crddh4+HoBBy+cihr/azaEiDRhPMJK7EHiiREPLBTLs7GBZygKCyKSiZmdks6tKugGXJoCEY2liJUihJAcItNyCIrqOiKUMXnbcRDgH2uNrHGsePlDNG+E9YoJX240JO3wpYsh8+x2n+1hXYUT7Sdvncnrl/MvQ4hCgIJhETd1sUXTOJJK42J5Kvut+hnVgaWwH/RlPfHSQ5tvp59vAz3Miv3BOLjatPB+FTwC0R/0D9kFEEiT6d8TwFlzJG24jK8imqWIgRCQl/0FoNhOh1oy0r7Nhlkzu3fNNobQ=
   on:
     tags: true
     repo: freakimkaefig/musicjson2abc
-    node: '5.1.0'
+    node: 5.1.0
