@@ -1,6 +1,6 @@
 {
   "name": "musicjson2abc",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A command-line tool to convert musicJSON to abc notation.",
   "main": "index.js",
   "scripts": {
@@ -33,5 +33,8 @@
   },
   "devDependencies": {
     "jsdoc": "^3.4.0"
+  },
+  "engines": {
+    "node": ">=5.1.0"
   }
 }
