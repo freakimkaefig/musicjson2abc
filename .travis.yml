@@ -1,20 +1,22 @@
 language: node_js
 node_js:
-  - "5"
-  - "5.9"
-  - "5.8"
-  - "5.7"
-  - "5.6"
-  - "5.5"
-  - "5.4"
-  - "5.3"
-  - "5.2"
-  - "5.1.0"
+- '5'
+- '5.9'
+- '5.8'
+- '5.7'
+- '5.6'
+- '5.5'
+- '5.4'
+- '5.3'
+- '5.2'
+- '5.1.0'
 
 deploy:
   provider: npm
+  email: freak.im.kaefig@gmx.net
+  api_key:
+    secure: eG3bcRf6RY2y/9G7e+tb2EY1LK2M8dytn+qumJyIX7sEX6PKIL01Is0i5DG2/MHLOGLg/PMMn8AIptwI+IxOH6Lr5XH/BMgxHxfH4fJNroDKY/x3sbvJX9dhWqVI2LUwcT2l29MdDfI36hBlVOnU2miiO0KK58+hoUeTxr2fFt9ASoj7mq6NZz2BgM+slwVv67s6s6L5u5++VChTbwH5CscobF4WAJJ5IqC33O44KGLqmukiB6c8vfZbGjv8NGv1aToTJqft0UbRqu8SAmY2CK82NRCnBUkyxD/sdonMoHbVGEVJO9om2QzOjPjTi8Q+Ue9wfCMeFLwD3cK92RRkKJ7gMsAdYDm4hZNzsdgYevnuItL+elqekk3aU27K3RfRB08WO+Uou1yVAAkiHhPwz9ZbZwsIhj6mSNOL/27Wl/fqtdb+pOH1XB4Eb5uPiDanzz/k37nPVloK41ph8c6YPgmzUGWAlamdmJXPhe3rQX7lTTdb3xCYlKsaSa6dKi/JYaEeGU6ptYI12Urn9127XhGfjlV0k1vKKlfQrFi5MRhSEEfWgV0fiTHQsvvuflFCPo46cZ4lxMy0RQvEk3cXmlHRV7IQIOPpWtCa2kPTrJnxDO39Ruz169tFxiFZipsOUcNw2hbcZr65PrHt/0uHbKN8KnspFXvGslu79+JF/aI=
   on:
     tags: true
-    node: "5.1.0"
-  api_key:
-    secure: "XxuDJMjPk4eZTgLiKc7ut1c6zuwOZAErAsGYshIuq/8ITE4qzX8jegZHVcKN//u/8+py9nM71NzGm+HJOiSF94R19t6lPD442/yuvo0Ey6zXVlVWiOX2rzjQ+p1RNJXQpZq++lQhxI3zAqBbtC2CnJjqoF4ZPxCFXv9ER+xqS2om1KXYBrKi34C8QChMp9rr9Kx+GqM6T4x5zssnUl7o87nNjs/5DWZ7PpEI5fYXdCfqnExEDS6g785G8NjpSUMR8r0OsOOjaG0x4LwW1V9tri6BQpTEz0Ugy7SjSFOirdAKODaBsGn9iTkg15BY8AESQTfqqLhqZPDC2Q5P57kruRgrwkg8WtfNVvaoAs56vYxq6zW9pzH7p4A0g4Oy/J3oqOY9pyE7ewd8CJdQwUFi4I3nERfDhX7PwZFCzznkXm9jpsmrxc5df7syaQtinDKMs4JGrawP3D/T52qan8ZMNfCkgXJ96IoZGXGc1WtPVQqIQ/mj3Lt52gcbwrYUK0Or0GiA2xl6vsos3YJ3z5sjwEw619v2Z0vDCoekvOJd85sjAgCewiMTAoL9yX+hm68zREY9I59RTbaIkz2H+Ucacz3OysAvD2n3RgljK3GZ8o6OXkjAW1L9Bk7C/CrEzFASYrb5jiJ1JJSHNsZazly2CsX37V0txMAslUH+g9PKqAY="
+    repo: freakimkaefig/musicjson2abc
+    node: '5.1.0'
