@@ -1,4 +1,8 @@
 # musicjson2abc
+
+[![Build Status](https://travis-ci.org/freakimkaefig/musicjson2abc.svg?branch=master)](https://travis-ci.org/freakimkaefig/musicjson2abc)
+[![npm version](https://badge.fury.io/js/musicjson2abc.svg)](https://badge.fury.io/js/musicjson2abc)
+
 A command-line tool to convert musicJSON to abc notation
 An example of the used format of json is in [example.json](https://github.com/freakimkaefig/musicjson2abc/blob/master/example.json).
 

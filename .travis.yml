@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+  - "5"
+  - "5.9"
+  - "5.8"
+  - "5.7"
+  - "5.6"
+  - "5.5"
+  - "5.4"
+  - "5.3"
+  - "5.2"
+  - "5.1"
+
+deploy:
+  provider: npm
+  on:
+    tags: true
+    branch: master
+  api_key:
+    secure: "XxuDJMjPk4eZTgLiKc7ut1c6zuwOZAErAsGYshIuq/8ITE4qzX8jegZHVcKN//u/8+py9nM71NzGm+HJOiSF94R19t6lPD442/yuvo0Ey6zXVlVWiOX2rzjQ+p1RNJXQpZq++lQhxI3zAqBbtC2CnJjqoF4ZPxCFXv9ER+xqS2om1KXYBrKi34C8QChMp9rr9Kx+GqM6T4x5zssnUl7o87nNjs/5DWZ7PpEI5fYXdCfqnExEDS6g785G8NjpSUMR8r0OsOOjaG0x4LwW1V9tri6BQpTEz0Ugy7SjSFOirdAKODaBsGn9iTkg15BY8AESQTfqqLhqZPDC2Q5P57kruRgrwkg8WtfNVvaoAs56vYxq6zW9pzH7p4A0g4Oy/J3oqOY9pyE7ewd8CJdQwUFi4I3nERfDhX7PwZFCzznkXm9jpsmrxc5df7syaQtinDKMs4JGrawP3D/T52qan8ZMNfCkgXJ96IoZGXGc1WtPVQqIQ/mj3Lt52gcbwrYUK0Or0GiA2xl6vsos3YJ3z5sjwEw619v2Z0vDCoekvOJd85sjAgCewiMTAoL9yX+hm68zREY9I59RTbaIkz2H+Ucacz3OysAvD2n3RgljK3GZ8o6OXkjAW1L9Bk7C/CrEzFASYrb5jiJ1JJSHNsZazly2CsX37V0txMAslUH+g9PKqAY="
