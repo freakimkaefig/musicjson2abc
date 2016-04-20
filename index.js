@@ -91,6 +91,9 @@ function getAbcKey(fifths, mode) {
  * @returns {string}
  */
 function getAbcNote(note) {
+  var dotted = 0;
+  if (note.dot) dotted = 1;
+
   // check if rest
   if (note.rest) {
     // return rest as abc
@@ -99,7 +102,7 @@ function getAbcNote(note) {
     // return note as abc
     return accidental[note.pitch.accidental]
       + pitches[note.pitch.octave][note.pitch.step]
-      + note.duration;
+      + (note.duration + dotted);
   }
 }
 
