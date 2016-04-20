@@ -20,6 +20,22 @@ var pitches = {
   "7": { "A": "a''", "B": "b''", "C": "c''", "D": "d''", "E": "e''", "F": "f''", "G": "g''" },
   "8": { "A": "a'''", "B": "b'''", "C": "c'''", "D": "d'''", "E": "e'''", "F": "f'''", "G": "g'''" }
 };
+var fields = {
+  "X": "id",
+  "M": "meter",
+  "L": "length",
+  "K": "key"
+};
+
+var durations = {
+  "1": "whole",
+  "0.5": "half",
+  "0.25": "quarter",
+  "0.125": "eighth",
+  "0.0625": "16th",
+  "0.03125": "32th",
+  "0.015625": "64th"
+};
 
 /**
  * Returns the abc notation string from given input
@@ -59,7 +75,7 @@ function getAbcString(input) {
     for (var j = 0; j < measure.notes.length; j++) {
 
       outputData += " "
-        + getAbcNote(measure.notes[j]);
+        + getAbcNote(measure.notes[j-1], measure.notes[j]);
     }
 
     if (measure.attributes.repeat.right) {
@@ -71,6 +87,23 @@ function getAbcString(input) {
 
   }
 
+  return outputData;
+}
+
+/**
+ * Returns the abc notation string from given input
+ * @param {object} input - The parsed input from input file
+ * @returns {string}
+ */
+function getMusicJSON(input) {
+  // TODO
+  var outputData = {};
+  var fragments = input.split('X:');
+  var preamble = fragments[0];
+  console.log(preamble);
+  outputData.id = preamble;
+
+  // console.log(input);
   return outputData;
 }
 
@@ -87,23 +120,39 @@ function getAbcKey(fifths, mode) {
 
 /**
  * Returns a note in abc notation from given note object (JSON)
- * @param {object} note - The note that should be transformed to abc
+ * @param {object} prevNote - The previous note
+ * @param {object} curNote - The note that should be transformed to abc
  * @returns {string}
  */
-function getAbcNote(note) {
-  var dotted = 0;
-  if (note.dot) dotted = 1;
+function getAbcNote(prevNote, curNote) {
+  var _accidental = accidental[curNote.pitch.accidental];
+  var _pitch = pitches[curNote.pitch.octave][curNote.pitch.step];
+  var _duration = curNote.duration;
+  if (typeof prevNote !== 'undefined') {
+    if (prevNote.dot) {
+      _duration = _duration * 2;
+    }
+  }
+  var _dotted = '';
+  if (curNote.dot) {
+    _dotted = '>';
+  }
 
   // check if rest
-  if (note.rest) {
+  if (curNote.rest) {
     // return rest as abc
-    return "z" + note.duration;
+    return "z" + _duration + _dotted;
   } else {
     // return note as abc
-    return accidental[note.pitch.accidental]
-      + pitches[note.pitch.octave][note.pitch.step]
-      + (note.duration + dotted);
+    return _accidental + _pitch + _duration + _dotted;
   }
+}
+
+/**
+ * Parse id from abc
+ */
+function getJSONId(data) {
+
 }
 
 
@@ -114,6 +163,10 @@ function getAbcNote(note) {
  */
 exports.convert2Abc = function(data) {
   return getAbcString(JSON.parse(data));
+};
+
+exports.convert2JSON = function(data) {
+  return getMusicJSON(data);
 };
 
 // Run jsdoc with: jsdoc index.js -d doc -R README.md
