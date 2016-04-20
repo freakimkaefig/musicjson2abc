@@ -6,6 +6,8 @@
 A command-line tool to convert musicJSON to abc notation
 An example of the used format of json is in [example.json](https://github.com/freakimkaefig/musicjson2abc/blob/master/example.json).
 
+This project is still under development. Feel free to use it and submit issues here.
+
 ## Getting started
 Install the module with:
 ```sh
