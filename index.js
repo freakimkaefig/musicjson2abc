@@ -2,6 +2,7 @@ var circleOfFifths = require('./dict/circleOfFifths.json');
 var accidental = require('./dict/accidentals.json');
 var pitches = require('./dict/pitches.json');
 var durations = require('./dict/durations.json');
+var clefs = require('./dict/clefs.json');
 
 /**
  * Returns the abc notation string from given input
@@ -27,6 +28,9 @@ function getAbcString(input) {
     + "\n";
   outputData += "K:"
     + getAbcKey(input.attributes.key.fifths, input.attributes.key.mode)
+    + "\n";
+  outputData += "K:"
+    + getAbcClef(input.attributes.clef.sign)
     + "\n";
 
   for (var i = 0; i < input.measures.length; i++) {
@@ -82,6 +86,15 @@ function getMusicJSON(input) {
 function getAbcKey(fifths, mode) {
   if (typeof mode === 'undefined') mode = 'major';
   return circleOfFifths[mode][fifths];
+}
+
+/**
+ * Returns the key for abc notation from given fifths
+ * @param {string} sign - The clef sign
+ * @returns {string}
+ */
+function getAbcClef(sign) {
+  return clefs[sign];
 }
 
 /**
