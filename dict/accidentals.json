@@ -1,0 +1,8 @@
+{
+  "flat-flat": "__",
+  "flat": "_",
+  "natural": "=",
+  "sharp" : "^",
+  "sharp-sharp" : "^^",
+  "undefined" : ""
+}
