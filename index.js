@@ -71,6 +71,7 @@ function getMusicJSON(input) {
   outputData.id = getJSONId(input);
   outputData.attributes = getJSONClefAndKey(input);
   outputData.attributes.time = getJSONTime(input);
+  outputData.attributes.divisions = getJSONDivisions(input, outputData.attributes.time['beat-type']);
   return JSON.stringify(outputData);
 }
 
@@ -206,6 +207,21 @@ function getJSONTime(data) {
 }
 
 /**
+ * Parse divisions from abc
+ * @param {string} data - The input data
+ * @param {int} beatType - The beat-type of the song
+ */
+function getJSONDivisions(data, beatType) {
+  var lines = data.split('\n');
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].match(/^L:/)) {
+      var length = lines[i].substr(lines[i].indexOf(':') + 1, lines[i].length).split('/');
+      return length[1] / beatType;
+    }
+  }
+
+  throw new Error('Could not determine "L:" field in abc');
+}
  * Returns a string in abc notation from given data
  * @param {object} data - The JSON data that should be transformed to abc
  * @returns {string}
