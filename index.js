@@ -222,6 +222,7 @@ function getJSONDivisions(data, beatType) {
 
   throw new Error('Could not determine "L:" field in abc');
 }
+/**
  * Returns a string in abc notation from given data
  * @param {object} data - The JSON data that should be transformed to abc
  * @returns {string}
