@@ -69,6 +69,7 @@ function getMusicJSON(input) {
   var outputData = {};
 
   outputData.id = getJSONId(input);
+  outputData.attributes = getJSONClefAndKey(input);
   return JSON.stringify(outputData);
 }
 
@@ -137,7 +138,51 @@ function getJSONId(data) {
   throw new Error('Could not determine "X:" field in abc');
 }
 
+/**
+ * Parse key from abc
+ * @param {string} data - The input data
+ * @return {object}
+ */
+function getJSONClefAndKey(data) {
+  var retFifths, retMode, retClef;
+  var lines = data.split('\n');
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].match(/^K:/)) {
+      var key = lines[i].substr(lines[i].indexOf(':') + 1, lines[i].length);
 
+      // Check if key is in circle of fifths
+      for (var mode in circleOfFifths) {
+        if (!circleOfFifths.hasOwnProperty(mode)) continue;
+        var obj = circleOfFifths[mode];
+        for (var prop in obj) {
+          if (!obj.hasOwnProperty(prop)) continue;
+          if (obj[prop] === key) {
+            retFifths = parseInt(prop);
+            retMode = mode;
+          }
+        }
+      }
+
+      // Check if key is a clef
+      for (var sign in clefs) {
+        if (!clefs.hasOwnProperty(sign)) continue;
+        if (clefs[sign] == key) {
+          retClef = sign;
+        }
+      }
+    }
+  }
+
+  if (typeof retFifths !== 'undefined'
+    && typeof retMode !== 'undefined'
+    && typeof retClef !== 'undefined') {
+    return {
+      "clef": {"sign": retClef, "line": 2},
+      "key": {"fifths": retFifths, "mode": retMode}
+    };
+  }
+
+  throw new Error('Could not determine "K:" field in abc');
 }
 
 
