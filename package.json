@@ -27,12 +27,11 @@
     "chalk": "~1.1.1",
     "commander": "~2.9.0",
     "fs": "0.0.2",
-    "nconf": "^0.8.4",
-    "chai": "^3.5.0",
-    "mocha": "^2.4.5"
   },
   "devDependencies": {
-    "jsdoc": "^3.4.0"
+    "chai": "^3.5.0",
+    "jsdoc": "^3.4.0",
+    "mocha": "^2.4.5"
   },
   "engines": {
     "node": ">=5.1.0"
