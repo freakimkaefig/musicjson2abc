@@ -66,15 +66,10 @@ function getAbcString(input) {
  * @returns {string}
  */
 function getMusicJSON(input) {
-  // TODO
   var outputData = {};
-  var fragments = input.split('X:');
-  var preamble = fragments[0];
-  console.log(preamble);
-  outputData.id = preamble;
 
-  // console.log(input);
-  return outputData;
+  outputData.id = getJSONId(input);
+  return JSON.stringify(outputData);
 }
 
 /**
@@ -129,8 +124,19 @@ function getAbcNote(prevNote, curNote) {
 
 /**
  * Parse id from abc
+ * @param {string} data - The input data
  */
 function getJSONId(data) {
+  var lines = data.split('\n');
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].indexOf('X:') > -1) {
+      return lines[i].substr(lines[i].indexOf(':') + 1, lines[i].length);
+    }
+  }
+
+  throw new Error('Could not determine "X:" field in abc');
+}
+
 
 }
 
