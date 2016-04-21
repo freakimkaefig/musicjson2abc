@@ -72,6 +72,8 @@ function getMusicJSON(input) {
   outputData.attributes = getJSONClefAndKey(input);
   outputData.attributes.time = getJSONTime(input);
   outputData.attributes.divisions = getJSONDivisions(input, outputData.attributes.time['beat-type']);
+  outputData.measures = getJSONMeasures(input); // TODO
+
   return JSON.stringify(outputData);
 }
 
@@ -222,6 +224,133 @@ function getJSONDivisions(data, beatType) {
 
   throw new Error('Could not determine "L:" field in abc');
 }
+
+/**
+ * Parse divisions from abc
+ * @param {string} data - The input data
+ */
+function getJSONMeasures(data) {
+  var retMeasures = [];
+  var lines = data.split('\n');
+  for (var i = lines.length - 1; i >= 0; i--) {
+    if (lines[i].match(/^(X:|T:|C:|O:|A:|M:|L:|Q:|P:|Z:|N:|G:|H:|K:|R:|B:|D:|F:|S:|I:|m:|r:|s:|U:|V:|W:|w:)/)) {
+      lines.splice(i, 1);
+    } else if (lines[i].match(/^\s?$/)) {
+      lines.splice(i, 1);
+    }
+  }
+
+  for (var l = 0; l < lines.length; l++) {
+    var measures = lines[l].split('|');
+    for (var m = 0; m < measures.length; m++) {
+      if (measures[m].match(/^\s*$/)) continue; // skip empty measures
+      var tempMeasure = {attributes: {}, notes: []};
+
+      // check repeat left & right
+      tempMeasure.attributes.left = measures[m].match(/^:/) ? true : false;
+      tempMeasure.attributes.right = measures[m].match(/:$/) ? true : false;
+
+      // check notes
+      var notes = measures[m].split(' ');
+      for (var n = 0; n < notes.length; n++) {
+        if (notes[n].match(/^\s*$/)) continue;  // skip spaces
+        if (notes[n].match(/^:$/)) continue; // skip colons
+        /* TODO:
+         * - Notes can be grouped together with beams
+         * - Notes can have specific duration or not
+         * - RegEx: /^(__|_|=|\^|\^\^)?[a-zA-Z]{1}(,|'){0,3}[0-9]{0,2}$/
+         */
+        console.log("Note", m, n, notes[n]);
+
+        var tempNote = {pitch: {}};
+
+        for (var x = 0; x < notes[n].length; x++) {
+          var char = notes[n][x];
+          var prevChar = notes[n][x-1];
+          console.log("Char", m, n, notes[n], char);
+          // if (notes[n][x] === ' ') {
+          //   continue;
+          // }
+          if (char === '_') {
+            if (prevChar === '_') {
+              tempNote.pitch.accidental = 'flat-flat';
+              tempNote.pitch.alter = -2;
+              continue;
+            }
+            tempNote.pitch.accidental = 'flat';
+            tempNote.pitch.alter = -1;
+            continue;
+          }
+
+          if (char === '=') {
+            tempNote.pitch.accidental = 'natural';
+            tempNote.pitch.alter = 0;
+            continue;
+          }
+
+          if (char === '^') {
+            if (prevChar === '^') {
+              tempNote.pitch.accidental = 'sharp-sharp';
+              tempNote.pitch.alter = 2;
+              continue;
+            }
+            tempNote.pitch.accidental = 'sharp';
+            tempNote.pitch.alter = 1;
+            continue;
+          }
+
+          if (char.match(/[A-Za-z]/)) {
+            tempNote.pitch.step = char.toUpperCase();
+            if (char.match(/[A-Z]/)) {
+              tempNote.pitch.octave = 4;
+            }
+            if (char.match(/[a-z]/)) {
+              tempNote.pitch.octave = 5;
+            }
+            continue;
+          }
+
+          // accidental
+          // if (notes[n][x].match(/^(_|=|\^)$/)) {
+          //   console.log(m, n, notes[n], notes[n][x]);
+          //   for (var acc in accidental) {
+          //     if (!accidental.hasOwnProperty(acc)) continue;
+          //     if (notes[n][x] === acc) {
+          //       tempNote.pitch.accidental = accidental[acc];
+          //     }
+          //   }
+          // }
+
+
+          // step
+          // for (var octave in pitches) {
+          //   if (!pitches.hasOwnProperty(octave)) continue;
+          //   for (var step in pitches[octave]) {
+          //     if (!pitches[octave].hasOwnProperty(step)) continue;
+          //     if (notes[n][x] === step) {
+          //
+          //     }
+          //   }
+          // }
+
+          console.log(tempNote);
+
+        }
+      }
+
+      retMeasures.push(tempMeasure);
+    }
+  }
+  console.log(lines);
+  console.log(retMeasures);
+
+  // for (var l = 0; l < lines.length; l++) {
+  //
+  // }
+
+  throw new Error('Could not determine "M:" field in abc');
+}
+
 /**
  * Returns a string in abc notation from given data
  * @param {object} data - The JSON data that should be transformed to abc
