@@ -70,6 +70,7 @@ function getMusicJSON(input) {
 
   outputData.id = getJSONId(input);
   outputData.attributes = getJSONClefAndKey(input);
+  outputData.attributes.time = getJSONTime(input);
   return JSON.stringify(outputData);
 }
 
@@ -185,6 +186,24 @@ function getJSONClefAndKey(data) {
   throw new Error('Could not determine "K:" field in abc');
 }
 
+/**
+ * Parse time / meter from abc
+ * @param {string} data - The input data
+ */
+function getJSONTime(data) {
+  var lines = data.split('\n');
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].match(/^M:/)) {
+      var meter = lines[i].substr(lines[i].indexOf(':') + 1, lines[i].length).split('/');
+      return {
+        "beats": parseInt(meter[0]),
+        "beat-type": parseInt(meter[1])
+      }
+    }
+  }
+
+  throw new Error('Could not determine "M:" field in abc');
+}
 
 /**
  * Returns a string in abc notation from given data
