@@ -1,8 +1,15 @@
 {
-  "flat-flat": "__",
-  "flat": "_",
-  "natural": "=",
-  "sharp" : "^",
-  "sharp-sharp" : "^^",
-  "undefined" : ""
+  "json": {
+    "flat-flat": "__",
+    "flat": "_",
+    "natural": "=",
+    "sharp" : "^",
+    "sharp-sharp" : "^^",
+    "undefined" : ""
+  },
+
+  "abc": {
+    "flat": -1,
+    "sharp": 1
+  }
 }
