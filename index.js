@@ -36,6 +36,10 @@ function getAbcString(input) {
     + "\n";
 
   for (var i = 0; i < input.measures.length; i++) {
+    if (i % 5 === 0 && i > 0) { // 5 measures per line
+      outputData += "\n";
+      outputData += "|";
+    }
     var measure = input.measures[i];
     if (measure.attributes.repeat.left) {
       outputData += ":";
@@ -185,15 +189,15 @@ var createJsonFromLines = function(tune) {
               measures[measureCounter].addNote(token, tune, ret.attributes.divisions, ret.attributes.time['beat-type']);
               break;
             case "bar":
-              if (barlineCounter === 0) {
-                measureCounter++;
+              if (token.type === 'bar_right_repeat') {
+                measures[measureCounter].setRepeatRight();
+              }
+              measureCounter++;
+              if (measures[measureCounter] === undefined) {
                 measures[measureCounter] = new Measure();
-                if (token.type === 'bar_left_repeat') {
-                  measures[measureCounter].setRepeatLeft();
-                }
-                if (token.type === 'bar_right_repeat') {
-                  measures[measureCounter].setRepeatRight();
-                }
+              }
+              if (token.type === 'bar_left_repeat') {
+                measures[measureCounter].setRepeatLeft();
               }
               break;
           }
@@ -205,7 +209,10 @@ var createJsonFromLines = function(tune) {
   // put measures together
   ret.measures = [];
   for (var i = 0; i < measures.length; i++) {
-    ret.measures[i] = measures[i].get();
+    var measure = measures[i].get();
+    if (measure.notes.length > 0) {
+      ret.measures.push(measure);
+    }
   }
   return ret;
 };
@@ -308,13 +315,18 @@ var getKeyByValue = function(object, value) {
 
 /**
  * Returns a string in abc notation from given data
- * @param {object} data - The JSON data that should be transformed to abc
+ * @param {object} data - The JSON string data that should be transformed to abc
  * @returns {string}
  */
 exports.convert2Abc = function(data) {
   return getAbcString(JSON.parse(data));
 };
 
+/**
+ * Returns a string in json notation from given abc data
+ * @param {object} data - The abc string that should be transformed to json
+ * @returns {string}
+ */
 exports.convert2JSON = function(data) {
   return getMusicJSON(data);
 };
