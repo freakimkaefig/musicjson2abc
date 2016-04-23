@@ -257,8 +257,26 @@ var Measure = function() {
     }
     _note.pitch.octave = _octave;
     _note.pitch.alter = _alter;
-    _note.duration = note.duration * divisions * beatType;
-    _note.type = durations[note.duration];
+
+    for (var i = 0; i < durations.length; i++) {
+      if (typeof durations[i+1] !== 'undefined') {
+        if (durations[i].duration > note.duration && durations[i+1].duration <= note.duration) {
+          var diff = note.duration - durations[i+1].duration;
+          _note.duration = durations[i+1].duration * divisions * beatType;
+          _note.type = durations[i+1].type;
+          if (diff > 0) {
+            if ((diff / durations[i+1].duration) === 0.5) {
+              _note.dot = true;
+            } else {
+              throw new Error('Unknown duration: ' + note.duration);
+            }
+          }
+          break;
+        }
+      } else {
+        throw new Error('Unknown duration: ' + note.duration);
+      }
+    }
 
     notes.push(_note);
   };
