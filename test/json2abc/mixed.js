@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var musicjson2abc = require('../index.js');
+var musicjson2abc = require('../../index.js');
 
 it("converts mixed musicJSON to abc", function() {
   var json = {
@@ -41,5 +41,5 @@ it("converts mixed musicJSON to abc", function() {
   json.measures.push(measure);
 
   var correctAbc = musicjson2abc.convert2Abc(JSON.stringify(json));
-  expect(correctAbc).to.equal("X:123456\nT:123456\nM:3/4\nL:1/16\nK:F\n _A,4 ^B2 c2>|");
+  expect(correctAbc).to.equal("X:123456\nT:123456\nM:3/4\nL:1/16\nK:F\nK:treble\n_A,4^B2c2>|");
 });

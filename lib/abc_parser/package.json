@@ -1,0 +1,11 @@
+{
+  "name": "abc_parser",
+  "version": "1.0.0",
+  "description": "Parses abc to manageable json",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lukas Lamm <lukas.lamm89@gmail.com>",
+  "license": "MIT"
+}
