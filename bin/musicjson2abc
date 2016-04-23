@@ -27,8 +27,9 @@ program.on('--help', function() {
   console.log('');
   console.log('  Hint:');
   console.log('');
-  console.log('    The input file should be a valid musicJSON file');
-  console.log('    The output file will become a valid abc file.')
+  console.log('    The input file should be a valid json / abc file.');
+  console.log('    No syntax checks performed.');
+  console.log('    The output file will become a valid abc / json file.')
   console.log('    This may overwrite existing files.');
   console.log('');
 });

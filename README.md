@@ -21,7 +21,6 @@ var musicjson2abc = require('musicjson2abc');
 var abc = musicjson2abc.convert2Abc('{"id":"123456","attributes":{"divisions":4,"clef":{"sign":"G","line":2},"key":{"fifths":-1},"time":{"beats":3,"beat-type":4}},"measures":[{"attributes":{"repeat":{"left":false,"right":false}},"notes":[{"type":"quarter","duration": 4,"rest": false,"pitch": {"step":"C","octave":4,"alter":0,"accidental": "flat"},"$$hashKey":"object:1255"}]}]}');
 
 console.log(abc);
-
 // output:
 //   X:123456
 //   T:123456
@@ -29,6 +28,13 @@ console.log(abc);
 //   L:1/16
 //   K:F
 //    _C4|
+
+
+var json = musicjson2abc.convert2JSON(abc);
+console.log(json);
+// output:
+// {"id":"123456","attributes":{"divisions":4,"clef":{"sign":"G","line":2},"key":{"fifths":-1},"time":{"beats":3,"beat-type":4}},"measures":[{"attributes":{"repeat":{"left":false,"right":false}},"notes":[{"type":"quarter","duration": 4,"rest": false,"pitch": {"step":"C","octave":4,"alter":0,"accidental": "flat"}}]}]}
+
 ```
 
 ## Command line tool
@@ -41,17 +47,22 @@ $ musicjson2abc --help
   Options:
 
     -h, --help     output usage information
+    -r, --reverse  convert abc to json instead
+    -d, --debug    outputs debug information on stdout
     -V, --version  output the version number
 
   Examples:
 
     $ musicjson2abc input.json output.abc
-    $ musicjson2abc example.json example.abc
+    $ musicjson2abc input.json output.abc -d
+    $ musicjson2abc example.abc example.json -r
 
   Hint:
 
-    The input file should be a valid musicJSON file
-    The output file will become a valid abc file. May overwrite existing files.
+    The input file should be a valid json / abc file.
+    No syntax checks performed.
+    The output file will become a valid abc / json file.
+    May overwrite existing files.
 ```
 
 ## License
