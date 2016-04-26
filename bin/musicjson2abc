@@ -2,6 +2,7 @@
 var program = require('commander');
 var chalk = require('chalk');
 var fs = require('fs');
+var path = require('path');
 
 var packageJson = require('../package.json');
 var app = require('../index');
@@ -23,14 +24,13 @@ program.on('--help', function() {
   console.log('  Examples:');
   console.log('');
   console.log('    $ musicjson2abc input.json output.abc');
+  console.log('    $ musicjson2abc path/to/input/ path/to/output/');
   console.log('    $ musicjson2abc -r example.json example.abc');
   console.log('');
   console.log('  Hint:');
   console.log('');
-  console.log('    The input file should be a valid json / abc file.');
-  console.log('    No syntax checks performed.');
-  console.log('    The output file will become a valid abc / json file.')
-  console.log('    This may overwrite existing files.');
+  console.log('    The input and output path should be a valid json / abc file or an existing path.');
+  console.log('    Both argumnets for input and output should be of same type (file or directory) not mixed.');
   console.log('');
 });
 
@@ -41,10 +41,6 @@ if (typeof inputFile === 'undefined') {
   console.info(chalk.cyan('Run musicjson2abc -h for further information.'));
   process.exit(1);
 }
-if (typeof outputFile === 'undefined') {
-  outputFile = setDefaultOutput(inputFile);
-  console.info(chalk.grey('INFO: No output file specified. Defaults to', outputFile));
-}
 
 readInput(inputFile, outputFile);
 
@@ -52,14 +48,33 @@ readInput(inputFile, outputFile);
  * Sets default output file if none specified
  * @param {string} input - The path to the input file
  */
-function setDefaultOutput(input) {
-  var output;
-  if (program.reverse) {
-    output = input.replace(/\.[^/.]+$/, "") + ".json";
+function getDefaultOutput(input) {
+  var inputStats = fs.lstatSync(input);
+  var ext;
+
+  if (inputStats.isDirectory()) {
+    return input;
+  } else if (inputStats.isFile()) {
+    if (program.reverse) {
+      ext = ".json";
+    } else {
+      ext = ".abc";
+    }
   } else {
-    output = input.replace(/\.[^/.]+$/, "") + ".abc";
+    throw new Error('Unspecified input path.');
   }
-  return output;
+
+  return input.replace(/\.[^/.]+$/, "") + ext;
+}
+
+function setOutputExtension(input) {
+  var ext;
+  if (program.reverse) {
+    ext = ".json";
+  } else {
+    ext = ".abc";
+  }
+  return input.replace(/\.[^/.]+$/, "") + ext;
 }
 
 /**
@@ -68,20 +83,49 @@ function setDefaultOutput(input) {
  * @param {string} output - The path to the output file
  */
 function readInput(input, output) {
-  fs.readFile(input, 'utf8', function(err, data) {
-    if (err) {
-      console.error(chalk.bold.red('ERROR:', err));
-      process.exit(1);
+  var inputStats = fs.lstatSync(input);
+  if (typeof output === 'undefined') {
+    output = getDefaultOutput(input);
+  }
+  var outputStats = fs.lstatSync(output);
+
+  if (inputStats.isDirectory() && outputStats.isDirectory()) {
+
+    var files = fs.readdirSync(input);
+    for (var i = 0; i < files.length; i++) {
+      if ((path.extname(files[i]) === '.json' && !program.reverse) || (path.extname(files[i]) === '.abc' && program.reverse)) {
+        if (fs.lstatSync(files[i]).isFile()) {
+          var iFile = path.join(input, files[i]);
+          var oFile = path.join(output, setOutputExtension(files[i]));
+          writeOutput(oFile, convert(readFile(iFile)));
+        }
+      }
     }
 
-    if (program.debug) {
-      console.log('Input data:');
-      console.log(data);
-      console.log('');
-    }
+  } else if (inputStats.isFile() && outputStats.isFile()) {
 
-    writeOutput(output, convert(data));
-  });
+    writeOutput(output, convert(readFile(input)));
+
+  } else {
+
+    throw new Error('Unspecified input or output path.');
+
+  }
+}
+
+/**
+ * Read file at specified path
+ * @param {string} path - The file path that should be read
+ * @returns {string}
+ */
+function readFile(path) {
+  var ret = fs.readFileSync(path, 'utf8');
+  if (program.debug) {
+    console.log('Input data:');
+    console.log(ret);
+    console.log('');
+  }
+  return ret
 }
 
 /**
@@ -108,11 +152,11 @@ function convert(data) {
 
 /**
  * Writes the abc notated string to the specified output file
- * @param {string} file - The path to the specified output file
+ * @param {string} path - The path to the specified output file
  * @param {string} data - The data that should be written to the file
  */
-function writeOutput(file, data) {
-  fs.writeFile(file, data, function(err) {
+function writeOutput(path, data) {
+  fs.writeFile(path, data, function(err) {
     if(err) {
       console.error(chalk.bold.red('ERROR:', err));
       process.exit(1);
@@ -124,7 +168,7 @@ function writeOutput(file, data) {
       console.log('');
     }
 
-    console.info(chalk.green('Output written to', outputFile));
+    console.info(chalk.green('Output written to', path));
   });
 }
 
