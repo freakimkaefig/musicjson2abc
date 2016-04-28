@@ -13,9 +13,7 @@ var Parser = require('./lib/abc_parser');
  */
 function getAbcString(input) {
   var outputData = "";
-  outputData += "X:"
-    + input.id
-    + "\n";
+  outputData += "X:1\n";
   outputData += "T:"
     + input.id
     + "\n";
@@ -128,17 +126,17 @@ function getAbcNote(prevNote, curNote) {
 
 /**
  * Get id from abc string
- * @param data
+ * @param {String} data - The abc string
  * @returns {string}
  */
 var getJsonId = function getJSONId(data) {
   var lines = data.split('\n');
   for (var i = 0; i < lines.length; i++) {
-    if (lines[i].indexOf('X:') > -1) {
+    if (lines[i].indexOf('T:') > -1) {
       return lines[i].substr(lines[i].indexOf(':') + 1, lines[i].length);
     }
   }
-  throw new Error('Could not determine "X:" field');
+  throw new Error('Could not determine "T:" field');
 };
 
 /**
@@ -199,6 +197,9 @@ var createJsonFromLines = function(tune) {
               if (token.type === 'bar_left_repeat') {
                 measures[measureCounter].setRepeatLeft();
               }
+              break;
+            default:
+              console.log(token);
               break;
           }
         }
