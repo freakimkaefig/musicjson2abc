@@ -65,5 +65,8 @@ $ musicjson2abc --help
     May overwrite existing files.
 ```
 
+## Documentation
+For full API documentation have a look at [API.md](API.md).
+
 ## License
-Licensed under the MIT License. See [LICENSE](https://github.com/freakimkaefig/musicjson2abc/blob/master/LICENSE) for further information.
+Licensed under the MIT License. See [LICENSE](LICENSE) for further information.

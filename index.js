@@ -186,7 +186,7 @@ var createJsonFromLines = function(tune) {
 
           switch (token.el_type) {
             case "note":
-              measures[measureCounter].addNote(token, tune, ret.attributes.divisions, ret.attributes.time['beat-type']);
+              measures[measureCounter].addNote(token, ret.attributes.divisions, ret.attributes.time['beat-type']);
               break;
             case "bar":
               if (token.type === 'bar_right_repeat') {
@@ -219,6 +219,7 @@ var createJsonFromLines = function(tune) {
 
 /**
  * Constructor for measure objects
+ * @constructor
  */
 var Measure = function() {
   var attributes = {
@@ -229,14 +230,27 @@ var Measure = function() {
   };
   var notes = [];
 
+  /**
+   * Set repeat left for measure
+   */
   this.setRepeatLeft = function () {
     attributes.repeat.left = true;
   };
+
+  /**
+   * Set repeat right for measure
+   */
   this.setRepeatRight = function () {
     attributes.repeat.right = true;
   };
 
-  this.addNote = function(note, tune, divisions, beatType) {
+  /**
+   * Add note to measure
+   * @param {object} note - The note object
+   * @param {Number} divisions - The calculated divisions
+   * @param {Number} beatType - The beat type
+   */
+  this.addNote = function(note, divisions, beatType) {
     var _note = {pitch:{}};
     var _octave = 5, _step, _alter = 0;
     if (note.hasOwnProperty('pitches')) {
@@ -288,6 +302,10 @@ var Measure = function() {
     notes.push(_note);
   };
 
+  /**
+   * Get measure object
+   * @returns {{attributes: {repeat: {left: boolean, right: boolean}}, notes: Array}}
+   */
   this.get = function() {
     return {
       attributes: attributes,
@@ -330,5 +348,3 @@ exports.convert2Abc = function(data) {
 exports.convert2JSON = function(data) {
   return getMusicJSON(data);
 };
-
-// Run jsdoc with: jsdoc index.js -d doc -R README.md
