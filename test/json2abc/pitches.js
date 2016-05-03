@@ -66,5 +66,5 @@ it("correctly converts pitches", function() {
   json.measures.push(measure);
 
   var correctAbc = musicjson2abc.convert2Abc(JSON.stringify(json));
-  expect(correctAbc).to.equal("X:123456\nT:123456\nM:3/4\nL:1/16\nK:F\nK:treble\nC,,,1D,,1E,1F1g1a'1b''1|");
+  expect(correctAbc).to.equal("X:1\nT:123456\nM:3/4\nL:1/16\nK:F\nK:treble\nC,,,1D,,1E,1F1g1a'1b''1|");
 });
