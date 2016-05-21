@@ -34,7 +34,7 @@ function getAbcString(input) {
     + "\n";
 
   for (var i = 0; i < input.measures.length; i++) {
-    if (i % 5 === 0 && i > 0) { // 5 measures per line
+    if (i % 4 === 0 && i > 0) { // 4 measures per line
       outputData += "\n";
       outputData += "|";
     }
