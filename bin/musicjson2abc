@@ -1,175 +1,60 @@
 #!/usr/bin/env node
 var program = require('commander');
-var chalk = require('chalk');
 var fs = require('fs');
-var path = require('path');
+var getStdin = require('get-stdin');
+var musicjson = require('musicjson');
 
 var packageJson = require('../package.json');
 var app = require('../index');
 
-var inputFile;
-var outputFile;
 
 program
   .version(packageJson.version)
-  .arguments('<input> [output]')
-  .option('-r, --reverse', 'Reverse conversion direction')
-  .option('-d, --debug', 'Output debug information')
-  .action(function onAction(input, output) {
-    inputFile = input;
-    outputFile = output;
-  });
+  .usage('[options] <file>\n If no <file> is given, default to stdin')
+  .option('-j, --json', 'Convert from json to abc (this is the default)')
+  .option('-a, --abc', 'Convert from abc to json')
+  .option('-x, --xml', 'Convert from xml to json')
+  .parse(process.argv);
 
 program.on('--help', function() {
   console.log('  Examples:');
   console.log('');
-  console.log('    $ musicjson2abc input.json output.abc');
-  console.log('    $ musicjson2abc path/to/input/ path/to/output/');
-  console.log('    $ musicjson2abc -r example.json example.abc');
+  console.log('    $ musicjson2abc input.json');
+  console.log('    $ musicjson2abc -j input.json');
+  console.log('    $ musicjson2abc -a input.abc');
+  console.log('    $ musicjson2abc -x input.xml');
   console.log('');
   console.log('  Hint:');
   console.log('');
-  console.log('    The input and output path should be a valid json / abc file or an existing path.');
-  console.log('    Both argumnets for input and output should be of same type (file or directory) not mixed.');
+  console.log('    The input path should be a valid json / abc / xml file.');
   console.log('');
 });
 
-program.parse(process.argv);
-
-if (typeof inputFile === 'undefined') {
-  console.error(chalk.bold.red('ERROR: No input file specified.'));
-  console.info(chalk.cyan('Run musicjson2abc -h for further information.'));
-  process.exit(1);
-}
-
-readInput(inputFile, outputFile);
+var source = program.args[0];
+var input = source ? fs.readFile(source, 'ascii', function(err, file) {
+  if (err) {
+    throw err;
+  }
+  convert(file);
+}) : getStdin().then(convert);
 
 /**
- * Sets default output file if none specified
- * @param {string} input - The path to the input file
+ * Reads input and converts according to given options (-j, -a, -x)
+ * No input validation, outputs to stdout
+ *
+ * @param {string} input - The input string either from stdin or filepath
  */
-function getDefaultOutput(input) {
-  var inputStats = fs.lstatSync(input);
-  var ext;
-
-  if (inputStats.isDirectory()) {
-    return input;
-  } else if (inputStats.isFile()) {
-    if (program.reverse) {
-      ext = ".json";
-    } else {
-      ext = ".abc";
-    }
-  } else {
-    throw new Error('Unspecified input path.');
-  }
-
-  return input.replace(/\.[^/.]+$/, "") + ext;
-}
-
-function setOutputExtension(input) {
-  var ext;
-  if (program.reverse) {
-    ext = ".json";
-  } else {
-    ext = ".abc";
-  }
-  return input.replace(/\.[^/.]+$/, "") + ext;
-}
-
-/**
- * Reads the JSON eoncoded data from the specified input file
- * @param {string} input - The path to the specified input file
- * @param {string} output - The path to the output file
- */
-function readInput(input, output) {
-  var inputStats = fs.lstatSync(input);
-  if (typeof output === 'undefined') {
-    output = getDefaultOutput(input);
-  }
-  var outputStats = fs.lstatSync(output);
-
-  if (inputStats.isDirectory() && outputStats.isDirectory()) {
-
-    var files = fs.readdirSync(input);
-    for (var i = 0; i < files.length; i++) {
-      if ((path.extname(files[i]) === '.json' && !program.reverse) || (path.extname(files[i]) === '.abc' && program.reverse)) {
-        var iFile = path.join(input, files[i]);
-        var oFile = path.join(output, setOutputExtension(files[i]));
-        writeOutput(oFile, convert(readFile(iFile)));
+function convert(input) {
+  if (program.abc) {
+    console.log(app.abc2json(input));
+  } else if (program.xml) {
+    musicjson.musicJSON(input, function(err, json) {
+      if (err) {
+        throw err;
       }
-    }
-
-  } else if (inputStats.isFile() && outputStats.isFile()) {
-
-    writeOutput(output, convert(readFile(input)));
-
+      console.log(app.xml2json(json));
+    });
   } else {
-
-    throw new Error('Unspecified input or output path.');
-
+    console.log(app.json2abc(input));
   }
 }
-
-/**
- * Read file at specified path
- * @param {string} path - The file path that should be read
- * @returns {string}
- */
-function readFile(path) {
-  var ret = fs.readFileSync(path, 'utf8');
-  if (program.debug) {
-    console.log('Input data:');
-    console.log(ret);
-    console.log('');
-  }
-  return ret
-}
-
-/**
- * Converts input to specified format
- * @param {string} data - The data that should be converted
- */
-function convert(data) {
-  if (program.reverse) {
-    if (program.debug) {
-      console.log('Converting abc to json.');
-      console.log('');
-    }
-    var output = app.convert2JSON(data);
-  } else {
-    if (program.debug) {
-      console.log('Converting json to abc.');
-      console.log('');
-    }
-    var output = app.convert2Abc(data);
-  }
-
-  return output;
-}
-
-/**
- * Writes the abc notated string to the specified output file
- * @param {string} path - The path to the specified output file
- * @param {string} data - The data that should be written to the file
- */
-function writeOutput(path, data) {
-  fs.writeFile(path, data, function(err) {
-    if(err) {
-      console.error(chalk.bold.red('ERROR:', err));
-      process.exit(1);
-    }
-
-    if (program.debug) {
-      console.log('Output data:');
-      console.log(data);
-      console.log('');
-    }
-
-    console.info(chalk.green('Output written to', path));
-  });
-}
-
-// Run with: musicjson2abc example.json
-
-// Run jsdoc with: jsdoc index.js -d doc -R README.md

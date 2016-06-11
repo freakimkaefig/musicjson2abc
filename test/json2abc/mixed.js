@@ -21,13 +21,13 @@ it("converts mixed musicJSON to abc", function() {
 
   measure.notes.push({
     "type": "half",
-    "duration": 4,
+    "duration": 8,
     "rest": false,
     "pitch": {"step": "A", "octave": 3, "alter": 0, "accidental": "flat"}
   });
   measure.notes.push({
     "type": "quarter",
-    "duration": 2,
+    "duration": 4,
     "rest": false,
     "pitch": {"step": "B", "octave": 4, "alter": 0, "accidental": "sharp"}
   });
@@ -40,6 +40,6 @@ it("converts mixed musicJSON to abc", function() {
   });
   json.measures.push(measure);
 
-  var correctAbc = musicjson2abc.convert2Abc(JSON.stringify(json));
-  expect(correctAbc).to.equal("X:1\nT:123456\nM:3/4\nL:1/16\nK:F\nK:treble\n_A,4^B2c2>|");
+  var correctAbc = musicjson2abc.json2abc(JSON.stringify(json));
+  expect(correctAbc).to.equal("X:1\nT:123456\nM:3/4\nL:1/16\nK:F\nK:treble\n_A,8^B4c2>|");
 });

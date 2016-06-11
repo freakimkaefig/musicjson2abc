@@ -11,7 +11,7 @@ var Parser = require('./lib/abc_parser');
  * @param {object} input - The parsed input from input file
  * @returns {string}
  */
-function getAbcString(input) {
+function convertJsonToAbc(input) {
   var outputData = "";
   outputData += "X:1\n";
   outputData += "T:"
@@ -63,13 +63,43 @@ function getAbcString(input) {
  * @param {object} input - The parsed input from input file
  * @returns {string}
  */
-function getMusicJSON(input) {
+function convertAbcToJson(input) {
   var outputData = {};
   var parser = new Parser();
   parser.parse(input);
   var tune = parser.getTune();
   outputData = createJsonFromLines(tune);
   outputData.id = getJsonId(input);
+
+  return JSON.stringify(outputData);
+}
+
+function convertXmlToJson(input) {
+  var outputData = {};
+  outputData.measures = [];
+
+  var score = input['score-partwise'].part;
+  // console.log(score);
+  if (score instanceof Array) {
+    throw new Error('Multi-Part data is not supported');
+  }
+
+  var measures = score.measure;
+  for (var i = 0; i < measures.length; i++) {
+    // console.log(measures[i]);
+    if (measures[i].hasOwnProperty('attributes')) {
+      outputData.attributes = parseXmlAttributes(measures[i].attributes);
+    }
+    outputData.measures.push({
+      attributes: {
+        repeat: {
+          left: false,
+          right: false
+        }
+      },
+      notes: parseXmlNotes(measures[i].note)
+    });
+  }
 
   return JSON.stringify(outputData);
 }
@@ -332,13 +362,76 @@ var getKeyByValue = function(object, value) {
   }
 };
 
+var parseXmlAttributes = function(attributes) {
+  var ret = {
+    'clef': {
+      'line': 2,
+      'sign': 'G'
+    },
+    'time': {
+      'beats': '4',
+      'beat-type': '4'
+    }
+  };
+
+  for (var i = 0; i < attributes.length; i++) {
+    if (attributes[i].hasOwnProperty('divisions')) {
+      ret.divisions = parseInt(attributes[i].divisions);
+    }
+    if (attributes[i].hasOwnProperty('key')) {
+      ret.key = attributes[i].key = {
+        fifths: attributes[i].key.fifths,
+        mode: attributes[i].key.mode
+      };
+    }
+    if (attributes[i].hasOwnProperty('time')) {
+      ret.time.beats = attributes[i].time.beats;
+      ret.time['beat-type'] = attributes[i].time['beat-type'];
+    }
+  }
+
+  return ret;
+};
+
+var parseXmlNotes = function(notes) {
+  var ret = [];
+  if (!(notes instanceof Array)) {
+    notes = [notes];
+  }
+
+  for (var i = 0; i < notes.length; i++) {
+    var tempNote = {
+      pitch: {
+        step: 'C',
+        octave: 5
+      },
+      rest: false,
+      duration: 2,
+      type: 'quarter'
+    };
+    if (typeof notes[i].pitch !== 'undefined') {
+      if (typeof notes[i].pitch.step !== 'undefined') tempNote.pitch.step = notes[i].pitch.step;
+      if (typeof notes[i].pitch.octave !== 'undefined') tempNote.pitch.octave = parseInt(notes[i].pitch.octave);
+      if (typeof notes[i].pitch.alter !== 'undefined') tempNote.pitch.alter = notes[i].pitch.alter;
+      if (typeof notes[i].pitch.accidental !== 'undefined') tempNote.pitch.accidental = notes[i].pitch.accidental;
+    }
+    if (typeof notes[i].rest !== 'undefined') tempNote.rest = notes[i].rest;
+    if (typeof notes[i].dot !== 'undefined') tempNote.dot = notes[i].dot;
+    if (typeof notes[i].duration !== 'undefined') tempNote.duration = parseInt(notes[i].duration);
+    if (typeof notes[i].type !== 'undefined') tempNote.type = notes[i].type;
+    ret.push(tempNote);
+  }
+
+  return ret;
+};
+
 /**
  * Returns a string in abc notation from given data
  * @param {object} data - The JSON string data that should be transformed to abc
  * @returns {string}
  */
-exports.convert2Abc = function(data) {
-  return getAbcString(JSON.parse(data));
+exports.json2abc = function(data) {
+  return convertJsonToAbc(JSON.parse(data));
 };
 
 /**
@@ -346,6 +439,15 @@ exports.convert2Abc = function(data) {
  * @param {object} data - The abc string that should be transformed to json
  * @returns {string}
  */
-exports.convert2JSON = function(data) {
-  return getMusicJSON(data);
+exports.abc2json = function(data) {
+  return convertAbcToJson(data);
+};
+
+/**
+ * Returns a string in json notation from given xml data
+ * @param {object} data - The music xml that should be transformed to json
+ * @returns {string}
+ */
+exports.xml2json = function(data) {
+  return convertXmlToJson(data);
 };

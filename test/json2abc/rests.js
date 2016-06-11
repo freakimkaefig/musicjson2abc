@@ -89,6 +89,6 @@ it("correctly converts rests", function() {
 
   json.measures.push(measure);
 
-  var correctAbc = musicjson2abc.convert2Abc(JSON.stringify(json));
+  var correctAbc = musicjson2abc.json2abc(JSON.stringify(json));
   expect(correctAbc).to.equal("X:1\nT:123456\nM:3/4\nL:1/16\nK:F\nK:treble\nz1z1>z4z2>z8z4>z16z8>z32z16>|");
 });
