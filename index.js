@@ -1,8 +1,173 @@
-var circleOfFifths = require('./dict/circleOfFifths.json');
-var accidental = require('./dict/accidentals.json');
-var pitches = require('./dict/pitches.json');
-var durations = require('./dict/durations.json');
-var clefs = require('./dict/clefs.json');
+var circleOfFifths = {
+  "major": {
+    "-7": "Cb",
+    "-6": "Gb",
+    "-5": "Db",
+    "-4": "Ab",
+    "-3": "Eb",
+    "-2": "Bb",
+    "-1": "F",
+    "0": "C",
+    "1": "G",
+    "2": "D",
+    "3": "A",
+    "4": "E",
+    "5": "B",
+    "6": "F#",
+    "7": "C#"
+  },
+  "minor": {
+    "-7": "Abm",
+    "-6": "Ebm",
+    "-5": "Bbm",
+    "-4": "Fm",
+    "-3": "Cm",
+    "-2": "Gm",
+    "-1": "Dm",
+    "0" : "Am",
+    "1" : "Em",
+    "2" : "Bm",
+    "3" : "F#m",
+    "4" : "C#m",
+    "5" : "G#m",
+    "6" : "D#m",
+    "7" : "A#m"
+  }
+};
+var accidental = {
+  "json": {
+    "flat-flat": "__",
+    "flat": "_",
+    "natural": "=",
+    "sharp" : "^",
+    "sharp-sharp" : "^^",
+    "undefined" : ""
+  },
+  "abc": {
+    "flat": -1,
+    "sharp": 1
+  }
+};
+var pitches = {
+  "json": {
+    "1": {
+      "A": "A,,,",
+      "B": "B,,,",
+      "C": "C,,,",
+      "D": "D,,,",
+      "E": "E,,,",
+      "F": "F,,,",
+      "G": "G,,,"
+    },
+    "2": {
+      "A": "A,,",
+      "B": "B,,",
+      "C": "C,,",
+      "D": "D,,",
+      "E": "E,,",
+      "F": "F,,",
+      "G": "G,,"
+    },
+    "3": {
+      "A": "A,",
+      "B": "B,",
+      "C": "C,",
+      "D": "D,",
+      "E": "E,",
+      "F": "F,",
+      "G": "G,"
+    },
+    "4": {
+      "A": "A",
+      "B": "B",
+      "C": "C",
+      "D": "D",
+      "E": "E",
+      "F": "F",
+      "G": "G"
+    },
+    "5": {
+      "A": "a",
+      "B": "b",
+      "C": "c",
+      "D": "d",
+      "E": "e",
+      "F": "f",
+      "G": "g"
+    },
+    "6": {
+      "A": "a'",
+      "B": "b'",
+      "C": "c'",
+      "D": "d'",
+      "E": "e'",
+      "F": "f'",
+      "G": "g'"
+    },
+    "7": {
+      "A": "a''",
+      "B": "b''",
+      "C": "c''",
+      "D": "d''",
+      "E": "e''",
+      "F": "f''",
+      "G": "g''"
+    },
+    "8": {
+      "A": "a'''",
+      "B": "b'''",
+      "C": "c'''",
+      "D": "d'''",
+      "E": "e'''",
+      "F": "f'''",
+      "G": "g'''"
+    }
+  },
+  "abc": {
+    "0": "C",
+    "1": "D",
+    "2": "E",
+    "3": "F",
+    "4": "G",
+    "5": "A",
+    "6": "B"
+  }
+};
+var durations = [
+  {
+    "type": "whole",
+    "duration": 1
+  },
+  {
+    "type": "half",
+    "duration": 0.5
+  },
+  {
+    "type": "quarter",
+    "duration": 0.25
+  },
+  {
+    "type": "eighth",
+    "duration": 0.125
+  },
+  {
+    "type": "16th",
+    "duration": 0.0625
+  },
+  {
+    "type": "32th",
+    "duration": 0.03125
+  },
+  {
+    "type": "64th",
+    "duration": 0.015625
+  }
+];
+var clefs = {
+  "G": "treble",
+  "F": "bass",
+  "C": "alto"
+};
 
 var Parser = require('./lib/abc_parser');
 
@@ -39,7 +204,7 @@ function convertJsonToAbc(input) {
       outputData += "|";
     }
     var measure = input.measures[i];
-    if (measure.attributes.repeat.left) {
+    if (measure.attributes.repeat.left === true || measure.attributes.repeat.left === 'true') {
       outputData += ":";
     }
 
@@ -48,7 +213,7 @@ function convertJsonToAbc(input) {
       outputData += getAbcNote(measure.notes[j-1], measure.notes[j]);
     }
 
-    if (measure.attributes.repeat.right) {
+    if (measure.attributes.repeat.right === true || measure.attributes.repeat.right === 'true') {
       outputData += ":";
     }
     outputData += "|";
@@ -131,21 +296,24 @@ function getAbcClef(sign) {
  * @returns {string}
  */
 function getAbcNote(prevNote, curNote) {
-  var _accidental = accidental.json[curNote.pitch.accidental];
-  var _pitch = pitches.json[curNote.pitch.octave][curNote.pitch.step];
-  var _duration = curNote.duration;
+  var _accidental = '';
+  if (typeof curNote.pitch.accidental !== 'undefined' && parseInt(curNote.pitch.accidental) !== 0) {
+    _accidental = accidental.json[parseInt(curNote.pitch.accidental)];
+  }
+  var _pitch = pitches.json[parseInt(curNote.pitch.octave)][curNote.pitch.step];
+  var _duration = parseInt(curNote.duration);
   if (typeof prevNote !== 'undefined') {
     if (prevNote.dot) {
       _duration = _duration * 2;
     }
   }
   var _dotted = '';
-  if (curNote.dot) {
+  if (curNote.dot === true || curNote.dot === 'true') {
     _dotted = '>';
   }
 
   // check if rest
-  if (curNote.rest) {
+  if (curNote.rest === true || curNote.rest === 'true') {
     // return rest as abc
     return "z" + _duration + _dotted;
   } else {
