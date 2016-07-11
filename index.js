@@ -298,7 +298,7 @@ function getAbcClef(sign) {
 function getAbcNote(prevNote, curNote) {
   var _accidental = '';
   if (typeof curNote.pitch.accidental !== 'undefined' && parseInt(curNote.pitch.accidental) !== 0) {
-    _accidental = accidental.json[parseInt(curNote.pitch.accidental)];
+    _accidental = accidental.json[curNote.pitch.accidental];
   }
   var _pitch = pitches.json[parseInt(curNote.pitch.octave)][curNote.pitch.step];
   var _duration = parseInt(curNote.duration);
