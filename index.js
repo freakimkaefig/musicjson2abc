@@ -277,7 +277,7 @@ function convertXmlToJson(input, id) {
  * @returns {string}
  */
 function getAbcKey(fifths, mode) {
-  if (typeof mode === 'undefined') mode = 'major';
+  if (typeof mode === 'undefined' || mode === null) mode = 'major';
   return circleOfFifths[mode][fifths];
 }
 
