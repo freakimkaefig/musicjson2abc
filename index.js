@@ -239,8 +239,9 @@ function convertAbcToJson(input) {
   return JSON.stringify(outputData);
 }
 
-function convertXmlToJson(input) {
+function convertXmlToJson(input, id) {
   var outputData = {};
+  outputData.id = id;
   outputData.measures = [];
 
   var score = input['score-partwise'].part;
@@ -310,6 +311,7 @@ function getAbcNote(prevNote, curNote) {
   var _dotted = '';
   if (curNote.dot === true || curNote.dot === 'true') {
     _dotted = '>';
+    _duration = _duration / 1.5;
   }
 
   // check if rest
@@ -536,10 +538,14 @@ var parseXmlAttributes = function(attributes) {
       'line': 2,
       'sign': 'G'
     },
+    'key': {
+      'fifths': 0
+    },
     'time': {
-      'beats': '4',
-      'beat-type': '4'
-    }
+      'beats': 4,
+      'beat-type': 4
+    },
+    'divisions': 1
   };
 
   for (var i = 0; i < attributes.length; i++) {
@@ -547,14 +553,12 @@ var parseXmlAttributes = function(attributes) {
       ret.divisions = parseInt(attributes[i].divisions);
     }
     if (attributes[i].hasOwnProperty('key')) {
-      ret.key = attributes[i].key = {
-        fifths: attributes[i].key.fifths,
-        mode: attributes[i].key.mode
-      };
+      ret.key.fifths = parseInt(attributes[i].key.fifths);
+      ret.key.mode = parseInt(attributes[i].key.mode);
     }
     if (attributes[i].hasOwnProperty('time')) {
-      ret.time.beats = attributes[i].time.beats;
-      ret.time['beat-type'] = attributes[i].time['beat-type'];
+      ret.time.beats = parseInt(attributes[i].time.beats);
+      ret.time['beat-type'] = parseInt(attributes[i].time['beat-type']);
     }
   }
 
@@ -571,7 +575,8 @@ var parseXmlNotes = function(notes) {
     var tempNote = {
       pitch: {
         step: 'C',
-        octave: 5
+        octave: 5,
+        alter: 0
       },
       rest: false,
       duration: 2,
@@ -580,7 +585,7 @@ var parseXmlNotes = function(notes) {
     if (typeof notes[i].pitch !== 'undefined') {
       if (typeof notes[i].pitch.step !== 'undefined') tempNote.pitch.step = notes[i].pitch.step;
       if (typeof notes[i].pitch.octave !== 'undefined') tempNote.pitch.octave = parseInt(notes[i].pitch.octave);
-      if (typeof notes[i].pitch.alter !== 'undefined') tempNote.pitch.alter = notes[i].pitch.alter;
+      if (typeof notes[i].pitch.alter !== 'undefined') tempNote.pitch.alter = parseInt(notes[i].pitch.alter);
       if (typeof notes[i].pitch.accidental !== 'undefined') tempNote.pitch.accidental = notes[i].pitch.accidental;
     }
     if (typeof notes[i].rest !== 'undefined') tempNote.rest = notes[i].rest;
@@ -616,6 +621,6 @@ exports.abc2json = function(data) {
  * @param {object} data - The music xml that should be transformed to json
  * @returns {string}
  */
-exports.xml2json = function(data) {
-  return convertXmlToJson(data);
+exports.xml2json = function(data, id) {
+  return convertXmlToJson(data, id);
 };
