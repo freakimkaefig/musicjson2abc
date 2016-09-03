@@ -311,7 +311,6 @@ function getAbcNote(prevNote, curNote) {
   var _dotted = '';
   if (curNote.dot === true || curNote.dot === 'true') {
     _dotted = '>';
-    _duration = _duration / 1.5;
   }
 
   // check if rest
