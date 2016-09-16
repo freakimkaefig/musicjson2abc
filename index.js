@@ -189,7 +189,7 @@ function convertJsonToAbc(input) {
     + "\n";
   outputData += "L:"
     + "1/"
-    + (input.attributes.divisions * input.attributes.time["beat-type"])
+    + (input.attributes.divisions * 4)
     + "\n";
   outputData += "K:"
     + getAbcKey(input.attributes.key.fifths, input.attributes.key.mode)

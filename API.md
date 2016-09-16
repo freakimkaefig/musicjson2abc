@@ -8,10 +8,10 @@
 ## Functions
 
 <dl>
-<dt><a href="#getAbcString">getAbcString(input)</a> ⇒ <code>string</code></dt>
+<dt><a href="#convertJsonToAbc">convertJsonToAbc(input)</a> ⇒ <code>string</code></dt>
 <dd><p>Returns the abc notation string from given input</p>
 </dd>
-<dt><a href="#getMusicJSON">getMusicJSON(input)</a> ⇒ <code>string</code></dt>
+<dt><a href="#convertAbcToJson">convertAbcToJson(input)</a> ⇒ <code>string</code></dt>
 <dd><p>Returns the abc notation string from given input</p>
 </dd>
 <dt><a href="#getAbcKey">getAbcKey(fifths, mode)</a> ⇒ <code>string</code></dt>
@@ -32,11 +32,14 @@
 <dt><a href="#getKeyByValue">getKeyByValue(object, value)</a> ⇒ <code>string</code></dt>
 <dd><p>Get object key by value</p>
 </dd>
-<dt><a href="#convert2Abc">convert2Abc(data)</a> ⇒ <code>string</code></dt>
+<dt><a href="#json2abc">json2abc(data)</a> ⇒ <code>string</code></dt>
 <dd><p>Returns a string in abc notation from given data</p>
 </dd>
-<dt><a href="#convert2JSON">convert2JSON(data)</a> ⇒ <code>string</code></dt>
+<dt><a href="#abc2json">abc2json(data)</a> ⇒ <code>string</code></dt>
 <dd><p>Returns a string in json notation from given abc data</p>
+</dd>
+<dt><a href="#xml2json">xml2json(data)</a> ⇒ <code>string</code></dt>
+<dd><p>Returns a string in json notation from given xml data</p>
 </dd>
 </dl>
 
@@ -88,9 +91,9 @@ Add note to measure
 Get measure object
 
 **Kind**: instance method of <code>[Measure](#Measure)</code>  
-<a name="getAbcString"></a>
+<a name="convertJsonToAbc"></a>
 
-## getAbcString(input) ⇒ <code>string</code>
+## convertJsonToAbc(input) ⇒ <code>string</code>
 Returns the abc notation string from given input
 
 **Kind**: global function  
@@ -99,9 +102,9 @@ Returns the abc notation string from given input
 | --- | --- | --- |
 | input | <code>object</code> | The parsed input from input file |
 
-<a name="getMusicJSON"></a>
+<a name="convertAbcToJson"></a>
 
-## getMusicJSON(input) ⇒ <code>string</code>
+## convertAbcToJson(input) ⇒ <code>string</code>
 Returns the abc notation string from given input
 
 **Kind**: global function  
@@ -179,9 +182,9 @@ Get object key by value
 | object | <code>object</code> | The object to search in |
 | value | <code>string</code> | The value to search for |
 
-<a name="convert2Abc"></a>
+<a name="json2abc"></a>
 
-## convert2Abc(data) ⇒ <code>string</code>
+## json2abc(data) ⇒ <code>string</code>
 Returns a string in abc notation from given data
 
 **Kind**: global function  
@@ -190,9 +193,9 @@ Returns a string in abc notation from given data
 | --- | --- | --- |
 | data | <code>object</code> | The JSON string data that should be transformed to abc |
 
-<a name="convert2JSON"></a>
+<a name="abc2json"></a>
 
-## convert2JSON(data) ⇒ <code>string</code>
+## abc2json(data) ⇒ <code>string</code>
 Returns a string in json notation from given abc data
 
 **Kind**: global function  
@@ -200,4 +203,15 @@ Returns a string in json notation from given abc data
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>object</code> | The abc string that should be transformed to json |
+
+<a name="xml2json"></a>
+
+## xml2json(data) ⇒ <code>string</code>
+Returns a string in json notation from given xml data
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>object</code> | The music xml that should be transformed to json |
 
