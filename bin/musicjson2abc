@@ -55,6 +55,6 @@ function convert(input) {
       console.log(app.xml2json(json));
     });
   } else {
-    console.log(app.json2abc(input));
+    console.log(app.json2abc(JSON.parse(input)));
   }
 }

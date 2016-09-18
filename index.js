@@ -603,7 +603,7 @@ var parseXmlNotes = function(notes) {
  * @returns {string}
  */
 exports.json2abc = function(data) {
-  return convertJsonToAbc(JSON.parse(data));
+  return convertJsonToAbc(data);
 };
 
 /**

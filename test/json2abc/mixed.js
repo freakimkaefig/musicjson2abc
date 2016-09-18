@@ -40,6 +40,6 @@ it("converts mixed musicJSON to abc", function() {
   });
   json.measures.push(measure);
 
-  var correctAbc = musicjson2abc.json2abc(JSON.stringify(json));
+  var correctAbc = musicjson2abc.json2abc(json);
   expect(correctAbc).to.equal("X:1\nT:123456\nM:3/4\nL:1/16\nK:F\nK:treble\n_A,8^B4c2>|");
 });
