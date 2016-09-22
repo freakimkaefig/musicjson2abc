@@ -179,9 +179,11 @@ var Parser = require('./lib/abc_parser');
 function convertJsonToAbc(input) {
   var outputData = "";
   outputData += "X:1\n";
-  outputData += "T:"
-    + input.id
-    + "\n";
+  if (typeof input.id !== 'undefined') {
+    outputData += "T:"
+      + input.id
+      + "\n";
+  }
   outputData += "M:"
     + input.attributes.time.beats
     + "/"
