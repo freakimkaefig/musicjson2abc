@@ -33,7 +33,7 @@ it("converts mixed musicJSON to abc", function() {
   });
   measure.notes.push({
     "type": "eighth",
-    "duration": 2,
+    "duration": 3,
     "rest": false,
     "pitch": {"step": "C", "octave": 5, "alter": 0},
     "dot": true

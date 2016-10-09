@@ -21,7 +21,8 @@
 <dd><p>Returns the key for abc notation from given fifths</p>
 </dd>
 <dt><a href="#getAbcNote">getAbcNote(prevNote, curNote)</a> ⇒ <code>string</code></dt>
-<dd><p>Returns a note in abc notation from given note object (JSON)</p>
+<dd><p>Returns a note in abc notation from given note object (JSON)
+!NOTE! min duration is 2</p>
 </dd>
 <dt><a href="#getJsonId">getJsonId(data)</a> ⇒ <code>string</code></dt>
 <dd><p>Get id from abc string</p>
@@ -140,6 +141,7 @@ Returns the key for abc notation from given fifths
 
 ## getAbcNote(prevNote, curNote) ⇒ <code>string</code>
 Returns a note in abc notation from given note object (JSON)
+!NOTE! min duration is 2
 
 **Kind**: global function  
 
