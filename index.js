@@ -612,7 +612,7 @@ exports.json2abc = function(data) {
 
 /**
  * Returns a string in json notation from given abc data
- * @param {object} data - The abc string that should be transformed to json
+ * @param {string} data - The abc string that should be transformed to json
  * @returns {string}
  */
 exports.abc2json = function(data) {
@@ -621,7 +621,7 @@ exports.abc2json = function(data) {
 
 /**
  * Returns a string in json notation from given xml data
- * @param {object} data - The music xml that should be transformed to json
+ * @param {object} data - json output of package 'musicjson' {@link https://github.com/saebekassebil/musicjson}
  * @returns {string}
  */
 exports.xml2json = function(data, id) {

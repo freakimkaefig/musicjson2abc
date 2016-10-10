@@ -18,7 +18,7 @@ npm install -g musicjson2abc
 ```javascript
 var musicjson2abc = require('musicjson2abc');
 
-var abc = musicjson2abc.convert2Abc('{"id":"123456","attributes":{"divisions":4,"clef":{"sign":"G","line":2},"key":{"fifths":-1},"time":{"beats":3,"beat-type":4}},"measures":[{"attributes":{"repeat":{"left":false,"right":false}},"notes":[{"type":"quarter","duration": 4,"rest": false,"pitch": {"step":"C","octave":4,"alter":0,"accidental": "flat"},"$$hashKey":"object:1255"}]}]}');
+var abc = musicjson2abc.json2abc({"id":"123456","attributes":{"divisions":4,"clef":{"sign":"G","line":2},"key":{"fifths":-1},"time":{"beats":3,"beat-type":4}},"measures":[{"attributes":{"repeat":{"left":false,"right":false}},"notes":[{"type":"quarter","duration": 4,"rest": false,"pitch": {"step":"C","octave":4,"alter":0,"accidental": "flat"},"$$hashKey":"object:1255"}]}]});
 
 console.log(abc);
 // output:
@@ -30,7 +30,7 @@ console.log(abc);
 //    _C4|
 
 
-var json = musicjson2abc.convert2JSON(abc);
+var json = musicjson2abc.abc2json(abc);
 console.log(json);
 // output:
 // {"id":"123456","attributes":{"divisions":4,"clef":{"sign":"G","line":2},"key":{"fifths":-1},"time":{"beats":3,"beat-type":4}},"measures":[{"attributes":{"repeat":{"left":false,"right":false}},"notes":[{"type":"quarter","duration": 4,"rest": false,"pitch": {"step":"C","octave":4,"alter":0,"accidental": "flat"}}]}]}

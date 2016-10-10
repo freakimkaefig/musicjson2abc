@@ -22,7 +22,7 @@
 </dd>
 <dt><a href="#getAbcNote">getAbcNote(prevNote, curNote)</a> ⇒ <code>string</code></dt>
 <dd><p>Returns a note in abc notation from given note object (JSON)
-!NOTE! min duration is 2</p>
+NOTE: min duration is 2</p>
 </dd>
 <dt><a href="#getJsonId">getJsonId(data)</a> ⇒ <code>string</code></dt>
 <dd><p>Get id from abc string</p>
@@ -141,7 +141,7 @@ Returns the key for abc notation from given fifths
 
 ## getAbcNote(prevNote, curNote) ⇒ <code>string</code>
 Returns a note in abc notation from given note object (JSON)
-!NOTE! min duration is 2
+NOTE: min duration is 2
 
 **Kind**: global function  
 
@@ -204,7 +204,7 @@ Returns a string in json notation from given abc data
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>object</code> | The abc string that should be transformed to json |
+| data | <code>string</code> | The abc string that should be transformed to json |
 
 <a name="xml2json"></a>
 
@@ -215,5 +215,5 @@ Returns a string in json notation from given xml data
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>object</code> | The music xml that should be transformed to json |
+| data | <code>object</code> | json output of package 'musicjson' [https://github.com/saebekassebil/musicjson](https://github.com/saebekassebil/musicjson) |
 
