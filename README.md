@@ -11,7 +11,7 @@ This project is still under development. Feel free to use it and submit issues h
 ## Getting started
 Install the module with:
 ```sh
-npm install -g musicjson2abc
+npm install --save musicjson2abc
 ```
 
 ## Example
@@ -38,24 +38,25 @@ console.log(json);
 ```
 
 ## Command line tool
-The command `musicjson2abc` accepts filepaths for input and output files.
+The command `musicjson2abc` accepts filepaths for input and output files.  
+Install with `npm install -g musicjson2abc`.
 ```
 $ musicjson2abc --help
 
-  Usage: musicjson2abc [options] <input> [output]
+  Usage: musicjson2abc [options] <file>\n If no <file> is given, default to stdin
 
   Options:
 
     -h, --help     output usage information
-    -r, --reverse  convert abc to json instead
-    -d, --debug    outputs debug information on stdout
-    -V, --version  output the version number
+    -j, --json     convert from json to abc
+    -a, --abc      convert from abc to json
+    -x, --xml      convert from xml to json
 
   Examples:
 
-    $ musicjson2abc input.json output.abc
-    $ musicjson2abc input.json output.abc -d
-    $ musicjson2abc example.abc example.json -r
+    $ musicjson2abc -j input.json > output.abc
+    $ musicjson2abc -a input.abc > output.abc
+    $ musicjson2abc -x input.xml > musicjson2abc -j > output.abc
 
   Hint:
 
